@@ -7,10 +7,10 @@ app = Flask(__name__)
 
 # --- Load all trained models at startup ---
 try:
-    lr_model = joblib.load("linear_model.joblib")
-    rf_model = joblib.load("complaint_model.joblib")
-    svr_model = joblib.load("svr_model.joblib")
-    xgb_model = joblib.load("xgboost_model.joblib")
+    lr_model = joblib.load("../models/linear_model.joblib")
+    rf_model = joblib.load("../models/complaint_model.joblib")
+    svr_model = joblib.load("../models/svr_model.joblib")
+    xgb_model = joblib.load("../models/xgboost_model.joblib")
     print("All 4 models loaded successfully.")
 except FileNotFoundError as e:
     print(f"Error loading models: {e}. Please run model_training.py first.")

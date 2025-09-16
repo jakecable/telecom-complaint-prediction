@@ -2,10 +2,9 @@ import pandas as pd
 
 # Clean and Prepare the Complaints Data
 try:
+    # Read the data, specifying the ZIP code column as a string
     df_complaints_raw = pd.read_csv(
-        "CGB_-_Consumer_Complaints_Data_20250913.csv",
-        dtype={"Zip": str},
-        low_memory=False,
+        "../data/raw/CGB_-_Consumer_Complaints_Data_20250913.csv", dtype={"Zip": str}
     )
     df_complaints_raw["zip_code"] = df_complaints_raw["Zip"].str.strip().str.slice(0, 5)
     df_complaints_raw.dropna(subset=["zip_code"], inplace=True)
@@ -19,7 +18,10 @@ except FileNotFoundError:
 # Clean and Prepare the Demographics Data
 try:
     df_demographics_raw = pd.read_csv(
-        "ACSDP5Y2023.DP05-Data.csv", header=0, skiprows=[1], dtype={"GEO_ID": str}
+        " ../data/raw/ACSDP5Y2023.DP05-Data.csv",
+        header=0,
+        skiprows=[1],
+        dtype={"GEO_ID": str},
     )
     df_demographics_raw["zip_code"] = df_demographics_raw["GEO_ID"].str.slice(-5)
     df_demographics = df_demographics_raw[
@@ -41,7 +43,7 @@ except FileNotFoundError:
 
 try:
     df_broadband_raw = pd.read_csv(
-        "bdc_48_fixed_broadband_summary_by_geography_place_D24_03sep2025.csv",
+        "../data/raw/bdc_48_fixed_broadband_summary_by_geography_place_D24_03sep2025.csv",
         dtype={"geography_id": str},
     )
     df_broadband_filtered = df_broadband_raw[
@@ -69,7 +71,7 @@ print("\nStep 4: Mapping Broadband Data to ZIP Codes using Geocorr...")
 try:
     # *** FIX 1: Add 'stab' (state abbreviation) to the list of columns to read ***
     df_geocorr = pd.read_csv(
-        "geocorr.csv",
+        "../data/raw/geocorr.csv",
         skiprows=[1],
         encoding="latin-1",
         dtype={"place": str, "zcta": str, "stab": str},
@@ -131,7 +133,7 @@ df_unified = df_unified[final_columns].dropna(
     subset=["stab"]
 )  # Drop rows where state is missing
 
-df_unified.to_csv("unified_model_dataset_corrected.csv", index=False)
+df_unified.to_csv("../data/processed/unified_model_dataset_corrected.csv", index=False)
 
 print("\nFinal Dataset")
 print(df_unified.head())

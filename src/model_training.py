@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
 
 
-data = pd.read_csv("unified_model_dataset_corrected.csv")
+data = pd.read_csv("../data/processed/unified_model_dataset_corrected.csv")
 
 # Prepare the data for modeling
 features = data.drop(
@@ -66,12 +66,12 @@ print(f"XGBoost:           {xgb_r2:.4f}")
 
 
 # Save All Four Trained Models
-joblib.dump(lr_model, "linear_model.joblib")
+joblib.dump(lr_model, "../models/linear_model.joblib")
 
 joblib.dump(
-    rf_model, "complaint_model.joblib"
+    rf_model, "../models/complaint_model.joblib"
 )  # Keeping original name for Random Forest
 
-joblib.dump(svr_model, "svr_model.joblib")
+joblib.dump(svr_model, "../models/svr_model.joblib")
 
-joblib.dump(xgb_model, "xgboost_model.joblib")
+joblib.dump(xgb_model, "../models/xgboost_model.joblib")
