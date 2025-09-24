@@ -59,7 +59,11 @@ Key Visuals:
 2.  **KPI Cards** Cards displaying "Total Complaints", "Average Complaints per ZIP", and the Top 5 Complaining ZIP codes.
 3.  **Scratter Plot ("Average Age per Complaint")** A plot of median_age vs complaint_volume, which visualized the relationship between demographics and service issues.
 4.  **Slicer ("State Abbreviations")** A slicer was made to filter the data between the selected state abbreviation. For now there is only data for Texas, but if more data is added in the future then more states can be selected.
+<<<<<<< HEAD
 ![Power BI Dashboard Screenshot](outputs/power_BI.png)
+=======
+![Power BI Dashboard Screenshot](images/power_bi_dashboard.png)
+>>>>>>> 21910f67607c58ed1397ecdda6a7b2b6cdc11398
 
 ---
 
