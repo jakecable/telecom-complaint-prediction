@@ -1,6 +1,6 @@
 # End-to-End Customer Complaint Analysis & Prediction API
 
-This project is a full-cycle data science initiative designed to analyze the drivers of customer complaints and build a predictive modeling service. The process involved a multi-stage pipeline: data engineering, interactive visualization, statistical analysis, advanced modeling, and finally, deployment as a live REST API.
+This project is a full-cycle data science project designed to analyze the drivers of customer complaints and build predictive models. The process involved a multi-stage pipeline: data engineering, interactive visualization, statistical analysis, advanced modeling, and deployment as a REST API.
 
 ## Tech Stack
 *   **Data Engineering:** Python, Pandas
@@ -35,55 +35,59 @@ customer_churn/
 
 ---
 
-## Phase 1: The Foundation - Data Engineering & ETL
+## Phase 1: Data Engineering & ETL
 
 ### The Challenge
-The project began with four separate, messy datasets: a log of thousands of individual customer complaints, a wide census file, broadband quality data aggregated by "Census Place," and a geographic crosswalk file. A direct analysis was impossible due to data quality issues and, most critically, a geographic mismatch between the datasets.
+The project began with four separate and messy datasets: a log of thousands of individual customer complaints, a wide census file, broadband quality data aggregated by "Census Place", and a geographic crosswalk file to fix a geographic mismatch between the datasets.
 
 ### My Solution
-I built a robust ETL (Extract, Transform, Load) pipeline using Python and Pandas to forge these sources into a single, clean dataset.
+I built an ETL (Extract, Transform, Load) pipeline using Python and Pandas to merge these sources into a single, clean dataset.
 
-1.  **Extract & Clean:** I ingested the raw CSVs, handling non-standard file encodings, skipping metadata rows, and standardizing data types to preserve data integrity (e.g., keeping leading zeros on ZIP codes).
-2.  **Transform & Aggregate:** I aggregated the thousands of complaint tickets into a single, powerful metric: `complaint_volume` per ZIP code. I also parsed the complex census file to extract key demographic features like `total_population` and `median_age`.
+1.  **Extract & Clean:** I read in the raw CSVs, handling non-standard file encodings, skipping metadata rows, and standardizing data types to preserve data integrity by keeping leading zeros on ZIP codes.
+2.  **Transform & Aggregate:** I aggregated the thousands of complaint tickets into a single metric: `complaint_volume` per ZIP code. I also parsed the census file to extract key demographic features like `total_population` and `median_age`.
 3.  **Solve the Geographic Mismatch:** To solve the core challenge of joining ZIP code data with "Census Place" data, I implemented a weighted-average allocation. Using a geographic crosswalk file, I accurately distributed broadband statistics from a single city across its multiple constituent ZIP codes, ensuring a high-fidelity final dataset.
 
-**The Outcome:** A single, unified CSV file (`unified_model_dataset_corrected.csv`), ready for analysis, where each row represented a ZIP code with its associated complaint volume, demographics, and broadband quality metrics.
+**The Outcome:** A single, unified CSV file (`unified_dataset.csv`), ready for analysis, where each row represented a ZIP code with its associated complaint volume, demographics, and broadband quality metrics.
 
 ---
 
-## Phase 2: Finding the Story - Visualization with Power BI
+## Phase 2: Visualization with Power BI
 
-With clean data in hand, the next step was to make it understandable. I used Microsoft Power BI to create a one-page executive dashboard designed to answer key business questions at a glance. This dashboard successfully translated the raw numbers into an interactive, visual story, making the insights accessible to anyone in the organization.
-
+The next step was to visualize the data. I used Microsoft Power BI to create a one-page dashboard designed to answer key business questions at a glance. This dashboard successfully translated the raw numbers into an interactive, visual story, making the insights accessible.
+Key Visuals:
+1.  **Geographic Map ("Zip Code Hotspots")** A map of Texas with ZIP codes sized by complaint volume, to draw attention to the biggest problem areas.
+2.  **KPI Cards** Cards displaying "Total Complaints", "Average Complaints per ZIP", and the Top 5 Complaining ZIP codes.
+3.  **Scratter Plot ("Average Age per Complaint")** A plot of median_age vs complaint_volume, which visualized the relationship between demographics and service issues.
+4.  **Slicer ("State Abbreviations")** A slicer was made to filter the data between the selected state abbreviation. For now there is only data for Texas, but if more data is added in the future then more states can be selected.
 ![Power BI Dashboard Screenshot](images/power_bi_dashboard.png)
 
 ---
 
-## Phase 3: Digging Deeper - Statistical Analysis in R
+## Phase 3: Statistical Analysis in R
 
-To add statistical rigor to the visual findings, I switched to R, a language renowned for its powerful statistical capabilities.
+I used R to create a Linear Regression Model and a scatter plot showing the connection between total population and total complaints.
 
 ### Key Findings from a Linear Regression Model:
 *   **Population is the Strongest Predictor:** The model confirmed with statistical significance (`p-value < 0.001`) that `total_population` is the primary driver of complaint volume.
-*   **A Surprising Insight:** After accounting for population, broadband availability was *not* a statistically significant predictor. This crucial finding suggests that simply improving speeds might not be the most effective way to reduce complaints.
+*   **A Surprising Insight:** After accounting for population, broadband availability was *not* a statistically significant predictor. This finding suggests that simply improving speeds might not be the most effective way to reduce complaints.
 *   **Model Performance:** The linear model achieved an R-squared of **0.45**, indicating it could explain about 45% of the variance in complaints—a strong baseline but with clear room for improvement.
 
 ![Population vs Complaints Scatter Plot](images/scatter_population_vs_complaints.png)
 
 ---
 
-## Phase 4: Building the Engine - Advanced Modeling & API Deployment
+## Phase 4: Advanced Modeling & API Deployment
 
-The final phase was to build a highly accurate predictive tool and make it accessible for real-world use.
+Next I wanted to create a predictive tool that was accessible for users to test.
 
-### 1. Building Better Models
+### 1. Building More Models
 Recognizing the limitations of a linear model, I trained and compared four different machine learning models in Python using Scikit-learn and XGBoost:
 *   Linear Regression
 *   Support Vector Regressor (SVR)
 *   Random Forest
-*   **XGBoost (Gradient Boosting)**
+*   XGBoost (Gradient Boosting)
 
-The ensemble models performed significantly better, with **XGBoost achieving an R-squared of over 0.65**, proving its ability to capture the complex, non-linear patterns in the data.
+The non-linear ensemble models performed significantly better, with **XGBoost achieving an R-squared of over 0.65**, proving its ability to capture the  non-linear patterns in the data.
 
 ### 2. Deploying the Models as a REST API
 A model is only useful if it can be used. I used **Flask** to wrap all four trained models into a single, flexible REST API. The API exposes a `/predict` endpoint that accepts a JSON payload with a ZIP code's features and returns a real-time prediction of the expected complaint volume.
